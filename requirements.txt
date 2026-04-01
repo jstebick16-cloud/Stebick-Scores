@@ -4,3 +4,4 @@ psycopg2-binary
 sqlalchemy
 notebook
 bs4
+lxml
