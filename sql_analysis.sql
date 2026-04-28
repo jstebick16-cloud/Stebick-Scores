@@ -5,19 +5,94 @@ SELECT
     From bartt_away_neutral
     ORDER BY "BADJ EM" DESC;
 
--- Champions Shooting Splits
-SELECT champions."Winner", shooting_splits."YEAR", shooting_splits."DUNKS FG%", shooting_splits."THREES FG%"
+-- Champions Shooting Percentages
+SELECT champions."Winner",
+       shooting_splits."YEAR",
+       shooting_splits."DUNKS FG%",
+       shooting_splits."CLOSE TWOS FG%",
+       shooting_splits."FARTHER TWOS FG%",
+       shooting_splits."THREES FG%"
 FROM shooting_splits
 JOIN champions
 ON shooting_splits."TEAM" = champions."Winner"
 AND shooting_splits."YEAR" = champions."Year"
+group by shooting_splits."YEAR", champions."Winner", shooting_splits."DUNKS FG%", shooting_splits."CLOSE TWOS FG%", shooting_splits."FARTHER TWOS FG%", shooting_splits."THREES FG%"
+ORDER BY shooting_splits."YEAR";
+
+-- Champions Shooting Ranks
+SELECT     champions."Winner", shooting_splits."YEAR",
+           shooting_splits."CLOSE TWOS FG% RANK",
+           shooting_splits."DUNKS FG% RANK",
+           shooting_splits."FARTHER TWOS FG% RANK",
+           shooting_splits."THREES FG% RANK"
+FROM shooting_splits
+JOIN champions
+ON shooting_splits."TEAM" = champions."Winner"
+AND shooting_splits."YEAR" = champions."Year"
+GROUP BY shooting_splits."CLOSE TWOS FG% RANK",
+         shooting_splits."DUNKS FG% RANK",
+         shooting_splits."FARTHER TWOS FG% RANK",
+         shooting_splits."THREES FG% RANK",
+         champions."Winner",
+         shooting_splits."YEAR"
+ORDER BY shooting_splits."YEAR";
+
+-- Champions Defensive Shooting Percentages
+SELECT
+        champions."Winner",
+        shooting_splits."YEAR",
+        shooting_splits."DUNKS FG%D",
+        shooting_splits."CLOSE TWOS FG%D",
+        shooting_splits."FARTHER TWOS FG%D",
+        shooting_splits."THREES FG%D"
+FROM shooting_splits
+JOIN champions
+ON shooting_splits."TEAM" = champions."Winner"
+AND shooting_splits."YEAR" = champions."Year"
+GROUP BY champions."Winner",
+        champions."Winner",
+        shooting_splits."YEAR",
+        shooting_splits."DUNKS FG%D",
+        shooting_splits."CLOSE TWOS FG%D",
+        shooting_splits."FARTHER TWOS FG%D",
+        shooting_splits."THREES FG%D"
+ORDER BY shooting_splits."YEAR";
+
+-- Champions Defensive Shooting Rankings
+    SELECT
+        champions."Winner",
+        shooting_splits."YEAR",
+        shooting_splits."DUNKS FG%D RANK",
+        shooting_splits."CLOSE TWOS FG%D RANK",
+        shooting_splits."FARTHER TWOS FG%D RANK",
+        shooting_splits."THREES FG%D RANK"
+FROM shooting_splits
+JOIN champions
+ON shooting_splits."TEAM" = champions."Winner"
+AND shooting_splits."YEAR" = champions."Year"
+GROUP BY champions."Winner",
+        shooting_splits."YEAR",
+        shooting_splits."DUNKS FG%D RANK",
+        shooting_splits."CLOSE TWOS FG%D RANK",
+        shooting_splits."FARTHER TWOS FG%D RANK",
+        shooting_splits."THREES FG%D RANK"
 ORDER BY shooting_splits."YEAR";
 
 -- Final Four Locations and Champions
-SELECT champions."Year", champions."Winner", final_four_locations."City", final_four_locations."State"
+SELECT
+    champions."Year",
+    champions."Winner",
+    final_four_locations."City",
+    final_four_locations."State",
+    final_four_locations."Arena",
+    final_four_locations."Latitude" AS "Arena Lat",
+    final_four_locations."Longitude" AS "Arena Long",
+	champions."Latitude" AS "Univeristy Lat",
+	champions."Longitude" AS "University Long"
 FROM champions
 JOIN final_four_locations
-ON champions."Year" = final_four_locations."Year";
+ON champions."Year" = final_four_locations."Year"
+ORDER BY champions."Year";
 
 -- Champions and Their Regular Season Profile
 SELECT champions."Year",
@@ -25,8 +100,6 @@ SELECT champions."Year",
        bartt_away_neutral."BADJ EM",
        bartt_away_neutral."BADJ O",
        bartt_away_neutral."BADJ D",
-       bartt_away_neutral."BARTHAG",
-       bartt_away_neutral."WAB",
        resumes."RESUME",
        resumes."Q1 W",
        resumes."Q1 PLUS Q2 W"
@@ -37,7 +110,7 @@ AND champions."Winner" = bartt_away_neutral."TEAM"
 JOIN resumes
 ON champions."Year" = resumes."YEAR"
 AND bartt_away_neutral."TEAM NO" = resumes."TEAM NO"
-ORDER BY champions."Year" DESC;
+ORDER BY champions."Year";
 
 -- Resume, Efficiency, Shooting, and Tournament Success
 SELECT
@@ -118,3 +191,8 @@ SELECT
 FROM bartt_away_neutral
 WHERE "SEED" <= 16
 group by "SEED";
+
+-- Champions and the Year they Won
+SELECT
+    champions."Winner", champions."Year"
+FROM champions
