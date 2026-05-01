@@ -16,7 +16,12 @@ FROM shooting_splits
 JOIN champions
 ON shooting_splits."TEAM" = champions."Winner"
 AND shooting_splits."YEAR" = champions."Year"
-group by shooting_splits."YEAR", champions."Winner", shooting_splits."DUNKS FG%", shooting_splits."CLOSE TWOS FG%", shooting_splits."FARTHER TWOS FG%", shooting_splits."THREES FG%"
+group by shooting_splits."YEAR",
+         champions."Winner",
+         shooting_splits."DUNKS FG%",
+         shooting_splits."CLOSE TWOS FG%",
+         shooting_splits."FARTHER TWOS FG%",
+         shooting_splits."THREES FG%"
 ORDER BY shooting_splits."YEAR";
 
 -- Champions Shooting Ranks
@@ -196,3 +201,22 @@ group by "SEED";
 SELECT
     champions."Winner", champions."Year"
 FROM champions
+
+-- Shot Selection Percentages
+SELECT champions."Winner",
+       shooting_splits."YEAR",
+       shooting_splits."CLOSE TWOS SHARE",
+       shooting_splits."FARTHER TWOS SHARE",
+       shooting_splits."THREES SHARE"
+FROM shooting_splits
+JOIN champions
+ON shooting_splits."TEAM" = champions."Winner"
+AND shooting_splits."YEAR" = champions."Year"
+group by shooting_splits."YEAR",
+			champions."Winner",
+       		shooting_splits."YEAR",
+       		shooting_splits."CLOSE TWOS SHARE",
+       		shooting_splits."FARTHER TWOS SHARE",
+       		shooting_splits."THREES SHARE"
+ORDER BY shooting_splits."YEAR";
+
